@@ -11,22 +11,28 @@ For assistance:
    Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
 */
 
-
+let itemsPerPage = 9;
 
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
 function showPage(list, page) {
-   let numItems = calcItemsOnPage(list.length, page);
-   let startIndex = (page * numItems) - numItems;
-   let endIndex   = page * numItems;
+   
+   let startIndex = (page * itemsPerPage) - numItems;
+   let endIndex   = page * itemsPerPage;
+
+   let listUL = document.getElementById('student-list');
+   listUL.innerHTML = '';
+
+   for(let i = 0; i < list.length; i++) {
+      if(i >= startIndex && i < endIndex) {
+
+      }
+   }
 
 }
 
-function calcItemsOnPage(listLength, page) {
-
-}
 
 
 /*
