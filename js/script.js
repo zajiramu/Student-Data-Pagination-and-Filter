@@ -45,7 +45,7 @@ function showPage(list, page) {
 
 // gets the ul element with the class link-list
    // stores it in pageButtons
-let pageButtons = document.getElementsByClassName('link-list')[0]; 
+const pageButtons = document.getElementsByClassName('link-list')[0]; 
 
 /*
 Creates the `addPagination` function
@@ -73,7 +73,6 @@ function addPagination(list) {
       // set the first button's class to 'active'
       if(i == 1) {
          pageButtons.firstElementChild.className = 'active';
-         console.log('it works');
       }
    }
 }
@@ -91,20 +90,66 @@ pageButtons.addEventListener('click', (e) => {
    if(e.target.tagName === 'BUTTON') {
       // console.log('it works');
       // gets button element clicked & stores it in button 
-      let button = e.target;
+      const button = e.target;
       // sets activeLi to the list element containing the 'active' class
-      let activeLi = pageButtons.getElementsByClassName('active')[0];
+      const activeLi = pageButtons.getElementsByClassName('active')[0];
       // sets the className of the list element in activeLi to an empty string
       activeLi.className = '';
       // sets buttonLi to the li parent element of the button that was clicked
-      let buttonLi = button.parentElement;
+      const buttonLi = button.parentElement;
       // gives li parent of clicked button the 'active' class
       buttonLi.className = 'active';
       // stores page # of on the button by getting the text contents of button
-      let pageNum = button.textContent;
+      const pageNum = button.textContent;
       // calls function showPage with array of student data objects & the page #
       // this function will display a new set of students on the page
       showPage(data, pageNum);
    }
 });
 
+/**
+ * CREATES AND APPENDS SEARCH BOX WITH SEARCH BUTTON TO THE PAGE
+ */
+
+// sets searchLabel to a newly created label element  
+const searchLabel = document.createElement('label');
+// sets for attribute of the element in searchLabel to "search"
+searchLabel.setAttribute('for', 'search');
+// sets class of label element in searchLabel to "student-search"
+searchLabel.className = 'student-search';
+
+// creates a new input element and stores it in searchBox
+const searchBox = document.createElement('input');
+// sets id attribute of element in searchBox to "search"
+searchBox.setAttribute('id', 'search');
+// sets placeholder attribute of element in searchBox to 'Search by name...'
+searchBox.setAttribute('placeholder', 'Search by name...');
+
+// appends input element in searchBox to label element in searchLabel
+searchLabel.appendChild(searchBox);
+
+// creates button element and sets its type attribute to button
+const searchButton = document.createElement('button');
+searchButton.setAttribute('type', 'button');
+
+// creates an img element 
+const searchImage = document.createElement('img');
+// sets src and alt attributes of these elements to strings 
+// passed in as second arguments to the method setAttribute  
+searchImage.setAttribute('src', "img/icn-search.svg");
+searchImage.setAttribute('alt', "Search icon");
+
+// appends image element to the button element (both created above)
+searchButton.appendChild(searchImage);
+
+// appends button element as the second child of the label element 
+searchLabel.insertAdjacentElement("beforeend", searchButton);
+
+// gets header element on page and stores it in the variable header
+const header = document.getElementsByClassName('header')[0];
+// appends label element in searchLabel to header element in header
+header.appendChild(searchLabel);
+
+/**
+ * ADDS 'KEYUP' EVENT LISTENER TO SEARCH BOX & 'CLICK' EVENT LISTENER TO SEARCH BUTTON 
+ */
