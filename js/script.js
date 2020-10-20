@@ -68,20 +68,16 @@ function addPagination(list) {
       // inserts li HTML element created above to the
       // ul element stored in pageButtons 
       pageButtons.insertAdjacentHTML('beforeend', li);
-
-      // on first iteration, or creation of the first button
-      // set the first button's class to 'active'
-      if(i == 1) {
-         pageButtons.firstElementChild.className = 'active';
-      }
    }
 }
+
 
 // Call functions showPage & addPagination 
 // to add pagination buttons and display first nine
 // students onto the page
 showPage(data, 1);
 addPagination(data);
+pageButtons.firstElementChild.className = "active";
 
 // adds event listener to ul element inside pageButtons
 // to listen for click events on the buttons
