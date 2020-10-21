@@ -77,7 +77,11 @@ function addPagination(list) {
 // students onto the page
 showPage(data, 1);
 addPagination(data);
-pageButtons.firstElementChild.className = "active";
+
+// gets first button element on page
+const firstButton = pageButtons.firstElementChild.firstElementChild;
+// sets first button element's class to 'active'
+firstButton.className = "active";
 
 // adds event listener to ul element inside pageButtons
 // to listen for click events on the buttons
@@ -149,3 +153,17 @@ header.appendChild(searchLabel);
 /**
  * ADDS 'KEYUP' EVENT LISTENER TO SEARCH BOX & 'CLICK' EVENT LISTENER TO SEARCH BUTTON 
  */
+
+ // adds keyup event listener to input element 
+ searchBox.addEventListener('keyup', (event) => {
+
+ });
+
+ // adds 'click' event listener to search button
+ searchButton.addEventListener('click', (event) => {
+   // takes value entered in searchBox input element and stores it in query
+   const query = searchBox.value;
+   if(query) {
+      
+   }
+ });
