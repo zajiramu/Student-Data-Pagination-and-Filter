@@ -17,12 +17,12 @@ let itemsPerPage = 9;
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
+let listUL = document.getElementsByClassName('student-list')[0];
 
 function showPage(list, page) {
    let startIndex = (page * itemsPerPage) - itemsPerPage;
    let endIndex   = page * itemsPerPage;
 
-   let listUL = document.getElementsByClassName('student-list')[0];
    listUL.innerHTML = '';
 
    for(let i = 0; i < list.length; i++) {
@@ -44,8 +44,8 @@ function showPage(list, page) {
 
 
 // gets the ul element with the class link-list
-   // stores it in pageButtons
-const pageButtons = document.getElementsByClassName('link-list')[0]; 
+   // stores it in pageButtonsUL
+const pageButtonsUL = document.getElementsByClassName('link-list')[0]; 
 
 /*
 Creates the `addPagination` function
@@ -53,6 +53,9 @@ creates and inserts/appends the elements needed for the pagination buttons
 */
 
 function addPagination(list) {
+   // clears any existing pagination buttons
+   pageButtonsUL.innerHTML = '';
+
    // calcs number of pages needed based on length of list array argument
    // stores result in numPages
    let numPages = Math.ceil(list.length / 9);
@@ -66,46 +69,19 @@ function addPagination(list) {
                   <button type="button">${i}</button>
                </li>`; 
       // inserts li HTML element created above to the
-      // ul element stored in pageButtons 
-      pageButtons.insertAdjacentHTML('beforeend', li);
+      // ul element stored in pageButtonsUL 
+      pageButtonsUL.insertAdjacentHTML('beforeend', li);
    }
+   // sets css class of first pagination button to 'active' to highlight it
+   pageButtonsUL.firstElementChild.firstElementChild.className = 'active';    
 }
 
 
-// Call functions showPage & addPagination 
+// Calls functions showPage & addPagination 
 // to add pagination buttons and display first nine
-// students onto the page
+// students onto page
 showPage(data, 1);
 addPagination(data);
-
-// gets first button element on page
-const firstButton = pageButtons.firstElementChild.firstElementChild;
-// sets first button element's class to 'active'
-firstButton.className = "active";
-
-// adds event listener to ul element inside pageButtons
-// to listen for click events on the buttons
-pageButtons.addEventListener('click', (e) => {
-   // checks if target is button
-   if(e.target.tagName === 'BUTTON') {
-      // console.log('it works');
-      // gets button element clicked & stores it in button 
-      const button = e.target;
-      // sets activeLi to the list element containing the 'active' class
-      const activeLi = pageButtons.getElementsByClassName('active')[0];
-      // sets the className of the list element in activeLi to an empty string
-      activeLi.className = '';
-      // sets buttonLi to the li parent element of the button that was clicked
-      const buttonLi = button.parentElement;
-      // gives li parent of clicked button the 'active' class
-      buttonLi.className = 'active';
-      // stores page # of on the button by getting the text contents of button
-      const pageNum = button.textContent;
-      // calls function showPage with array of student data objects & the page #
-      // this function will display a new set of students on the page
-      showPage(data, pageNum);
-   }
-});
 
 /**
  * CREATES AND APPENDS SEARCH BOX WITH SEARCH BUTTON TO THE PAGE
@@ -150,20 +126,84 @@ const header = document.getElementsByClassName('header')[0];
 // appends label element in searchLabel to header element in header
 header.appendChild(searchLabel);
 
+// adds event listener to ul element inside pageButtonsUL
+// to listen for click events on the buttons
+pageButtonsUL.addEventListener('click', (e) => {
+   // checks if target is button
+   if(e.target.tagName === 'BUTTON') {
+      // gets button element clicked & stores it in button 
+      const button = e.target;
+      // sets activeButton to the button element containing the 'active' class
+      // there should be only one button with active class 
+      const activeButton = pageButtonsUL.getElementsByClassName('active')[0];
+      // sets the className of the button element in activeButton to an empty string
+      activeButton.className = '';
+      // sets clicked button element's class name to active to highlight it 
+      button.className = 'active';
+      // sets pageNum of button by getting the text contents of button element
+      const pageNum = button.textContent;
+      // calls function showPage with array of student data objects & the page #
+      // this function will display a new set of students on the page
+      if(searchBox.value) {
+
+      }
+      else {
+         showPage(data, pageNum);
+      }
+   }
+});
+
 /**
  * ADDS 'KEYUP' EVENT LISTENER TO SEARCH BOX & 'CLICK' EVENT LISTENER TO SEARCH BUTTON 
  */
 
- // adds keyup event listener to input element 
- searchBox.addEventListener('keyup', (event) => {
-
- });
-
  // adds 'click' event listener to search button
  searchButton.addEventListener('click', (event) => {
-   // takes value entered in searchBox input element and stores it in query
-   const query = searchBox.value;
-   if(query) {
-      
+   // empty array for storing student objects whose first and/or last property of the name object 
+   // property match the query entered by the user
+   const matchedStudents = [];
+   // takes string value entered in searchBox input element, converts it to lowercase, 
+   // removes leading & trailing whitespaces if any & stores it in queryString 
+   const queryString = searchBox.value.toLowerCase().trim();
+   // splits input query string by space into an array of words 
+   const queryArray = queryString.split(' ');
+   // loops through student objects in data array
+   for(const student of data) {
+      // gets first & last name properties of current student object
+      // as strings & converts them to lower case
+      const firstName = student.name.first.toLowerCase();
+      const lastName  = student.name.last.toLowerCase();
+      // if the array of query words (entered in search bar) match the first and last name 
+      // properties of the current student object
+      if(queryArray.includes(firstName) || queryArray.includes(lastName)) {
+         // add current student object to matchedStudents array
+         matchedStudents.push(student);
+      }
+   }
+   addPagination(matchedStudents);
+   showPage(matchedStudents, 1);
+ });
+
+ // adds keyup event listener to input element 
+ searchBox.addEventListener('keyup', (event) => {
+   const matchedStudents = [];
+   const queryString = searchBox.value.toLowerCase();
+   for(const student of data) {
+      const firstName = student.name.first.toLowerCase();
+      const lastName = student.name.last.toLowerCase();
+      const fullName = firstName + ' ' + lastName;
+      if( fullName.includes(queryString) ) {
+         matchedStudents.push(student);
+      }
+   }
+   if(matchedStudents.length != 0) {
+      addPagination(matchedStudents);
+      showPage(matchedStudents, 1);
+   }
+   else {
+      pageButtonsUL.innerHTML = '';
+      listUL.innerHTML = '';
    }
  });
+
+ 
