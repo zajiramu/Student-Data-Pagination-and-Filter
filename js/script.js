@@ -13,20 +13,28 @@ For assistance:
 
 let itemsPerPage = 9;
 
+// sets listUL to the ul element on the page that will hold each student object
+// as a list item
+let listUL = document.getElementsByClassName('student-list')[0];
+
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
-let listUL = document.getElementsByClassName('student-list')[0];
-
 function showPage(list, page) {
+   // computes start and end indices for displaying
+   // 1st 9, 2nd, 9, etc. students on the page based on the value 
+   // of the integer argument page passed in 
    let startIndex = (page * itemsPerPage) - itemsPerPage;
    let endIndex   = page * itemsPerPage;
-
+   // clears any existing students on the page
    listUL.innerHTML = '';
-
+   // loops the entire length of the list student object array passed in as argument 
    for(let i = 0; i < list.length; i++) {
+      // checks if i is between startIndex & endIndex
       if(i >= startIndex && i < endIndex) {
+         // sets li to HTML that presents the data for a student object as a list item
+         // to the page
          let li = `<li class="student-item cf">
                      <div class="student-details">
                      <img class="avatar" src="${list[i].picture.medium}" alt="Profile Picture">
@@ -37,6 +45,8 @@ function showPage(list, page) {
                      <span class="date">Joined ${list[i].registered.date}</span>
                      </div>
                   </li>`;
+         // inserts template literal reprsenting HTML in li to the ul element
+         // which holds student data on the page
          listUL.insertAdjacentHTML('beforeend', li);
       }
    }
@@ -45,6 +55,7 @@ function showPage(list, page) {
 
 // gets the ul element with the class link-list
    // stores it in pageButtonsUL
+   // this ul element will hold buttons for pagination
 const pageButtonsUL = document.getElementsByClassName('link-list')[0]; 
 
 /*
@@ -75,7 +86,6 @@ function addPagination(list) {
    // sets css class of first pagination button to 'active' to highlight it
    pageButtonsUL.firstElementChild.firstElementChild.className = 'active';    
 }
-
 
 // Calls functions showPage & addPagination 
 // to add pagination buttons and display first nine
@@ -145,7 +155,7 @@ pageButtonsUL.addEventListener('click', (e) => {
       // calls function showPage with array of student data objects & the page #
       // this function will display a new set of students on the page
       if(searchBox.value) {
-
+         showPage(matchedStudents, pageNum);
       }
       else {
          showPage(data, pageNum);
@@ -157,16 +167,18 @@ pageButtonsUL.addEventListener('click', (e) => {
  * ADDS 'KEYUP' EVENT LISTENER TO SEARCH BOX & 'CLICK' EVENT LISTENER TO SEARCH BUTTON 
  */
 
+ // empty array for storing student objects whose first and/or last property of the name object 
+ // property match the query entered by the user
+ let matchedStudents = [];
+
  // adds 'click' event listener to search button
  searchButton.addEventListener('click', (event) => {
-   // empty array for storing student objects whose first and/or last property of the name object 
-   // property match the query entered by the user
-   const matchedStudents = [];
    // takes string value entered in searchBox input element, converts it to lowercase, 
    // removes leading & trailing whitespaces if any & stores it in queryString 
    const queryString = searchBox.value.toLowerCase().trim();
-   // splits input query string by space into an array of words 
-   const queryArray = queryString.split(' ');
+   // clears matched students array so it can be populated with newer 
+   // possible matching queries
+   matchedStudents = [];
    // loops through student objects in data array
    for(const student of data) {
       // gets first & last name properties of current student object
@@ -175,7 +187,7 @@ pageButtonsUL.addEventListener('click', (e) => {
       const lastName  = student.name.last.toLowerCase();
       // if the array of query words (entered in search bar) match the first and last name 
       // properties of the current student object
-      if(queryArray.includes(firstName) || queryArray.includes(lastName)) {
+      if(queryString.includes(firstName) || queryString.includes(lastName)) {
          // add current student object to matchedStudents array
          matchedStudents.push(student);
       }
@@ -186,12 +198,10 @@ pageButtonsUL.addEventListener('click', (e) => {
 
  // adds keyup event listener to input element 
  searchBox.addEventListener('keyup', (event) => {
-   const matchedStudents = [];
+   matchedStudents = [];
    const queryString = searchBox.value.toLowerCase();
    for(const student of data) {
-      const firstName = student.name.first.toLowerCase();
-      const lastName = student.name.last.toLowerCase();
-      const fullName = firstName + ' ' + lastName;
+      const fullName = student.name.first.toLowerCase() + ' ' + student.name.last.toLowerCase();
       if( fullName.includes(queryString) ) {
          matchedStudents.push(student);
       }
