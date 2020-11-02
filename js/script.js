@@ -198,19 +198,42 @@ pageButtonsUL.addEventListener('click', (e) => {
 
  // adds keyup event listener to input element 
  searchBox.addEventListener('keyup', (event) => {
+   // clears matchedStudents array to avoid including matches more than once
+   // as user types, each key stroke will trigger this event listener
    matchedStudents = [];
+   // sets queryString to the current string in search text field
+   // converting it first to lowercase
    const queryString = searchBox.value.toLowerCase();
+   // loops through array of student objects
    for(const student of data) {
+      // sets fullName to string constructed from the first and last string properties of the name
+      // object, which is itself a property of each student object 
+      // fullName essentially contains the current student objects first name followed by a space and 
+      // the student objects last name 
       const fullName = student.name.first.toLowerCase() + ' ' + student.name.last.toLowerCase();
+      // checks if fullName includes the string stored in queryString
       if( fullName.includes(queryString) ) {
+         // adds current student object to matchedStudents array
          matchedStudents.push(student);
       }
    }
+   // checks if length of matchedStudents array is NOT 0
+   // i.e. at least one match occured 
    if(matchedStudents.length != 0) {
+      // calls functions addPagination & showPage with array matchedStudents
+      // as argument; these functions display the matching searching results to the query of the user 
+      // to the page and add pagination buttons for navigating between search the pages of search results 
+      // if they cannot fit on one page i.e. there are more than 9 search results 
       addPagination(matchedStudents);
       showPage(matchedStudents, 1);
    }
+   // else ... array matchedStudents is empty
+   // i.e. NO matches occured 
    else {
+      // sets innerHTML of ul elements in pageButtonsUL & listUL
+      // to an empty string
+      // essentially clears the page displaying no students and no pagination buttons
+      // since no matches occured
       pageButtonsUL.innerHTML = '';
       listUL.innerHTML = '';
    }
