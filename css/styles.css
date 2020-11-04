@@ -2,6 +2,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;800&display=swap');
 
+#no-results {
+  text-align: left;
+  font-size: 30px;
+  font-weight: 400;
+}
+
 * {
 	box-sizing: border-box;
 }
@@ -23,8 +29,6 @@ ul {
   margin: auto;
   width: 95%;
 }
-
-
 
 header {
   text-align: center;

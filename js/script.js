@@ -137,7 +137,7 @@ const header = document.getElementsByClassName('header')[0];
 header.appendChild(searchLabel);
 
 // adds event listener to ul element inside pageButtonsUL
-// to listen for click events on the buttons
+// to listen for click events on its children button elements
 pageButtonsUL.addEventListener('click', (e) => {
    // checks if target is button
    if(e.target.tagName === 'BUTTON') {
@@ -220,23 +220,58 @@ pageButtonsUL.addEventListener('click', (e) => {
    // checks if length of matchedStudents array is NOT 0
    // i.e. at least one match occured 
    if(matchedStudents.length != 0) {
+      // calls function removeNoResultsDiv which will check to see if a 'No Results Found!'
+      // message is displayed on the page from a previous keystroke
+      // removes the HTML element containing the message if it exists
+      removeNoResultsDiv();
       // calls functions addPagination & showPage with array matchedStudents
-      // as argument; these functions display the matching searching results to the query of the user 
-      // to the page and add pagination buttons for navigating between search the pages of search results 
+      // as argument; these functions display the matching search results to the query of the user 
+      // to the page and add pagination buttons for navigating between pages of search results 
       // if they cannot fit on one page i.e. there are more than 9 search results 
       addPagination(matchedStudents);
       showPage(matchedStudents, 1);
    }
    // else ... array matchedStudents is empty
-   // i.e. NO matches occured 
+   // i.e. NO matches occurred 
    else {
-      // sets innerHTML of ul elements in pageButtonsUL & listUL
-      // to an empty string
-      // essentially clears the page displaying no students and no pagination buttons
-      // since no matches occured
-      pageButtonsUL.innerHTML = '';
-      listUL.innerHTML = '';
+      // calls function removeNoResultsDiv to remove 'No Results Found!'
+      // message from the page, if it exists
+      // this call is necessary so that multiple 'No Results Found!'
+      // messages don't populate the screen as user continues to type into search box
+      removeNoResultsDiv();
+      // calls function addNoResultsDiv to 
+      addNoResultsDiv();
    }
  });
+
+ // defines function addNoResultsDiv
+   // this function clears the UL elements containing the student data
+   // and page buttons and then creates and appends a div to the page 
+   // containing the message 'No Results Found!'
+function addNoResultsDiv() {
+   // sets innerHTML of listUL to an empty string
+   // clears student data currently being displayed 
+   listUL.innerHTML = '';
+   // sets innerHTML of pageButtonsUL to an empty string
+   // clears pagination buttons from page 
+   pageButtonsUL.innerHTML = '';
+   // sets noResultsDiv to an template literal which is an HTML div element
+   // having id attribute set to 'no-results'
+   const noResultsDiv = `<div id='no-results'>No Results Found!</div>`;
+   // sets header to the HTML header element object
+   const header = document.querySelector('header');
+   // inserts div element in noResultsDiv after header element in header
+   header.insertAdjacentHTML('afterend', noResultsDiv);
+}
+
+// defines function removeNoResultsDiv
+   // this function checks to see if a div element having id attribute of 'no-results'
+   // exists in the document object; removes it if it does
+function removeNoResultsDiv() {
+   const noResultsDiv = document.querySelector('#no-results');
+   if(noResultsDiv) {
+      noResultsDiv.remove();
+   }
+}
 
  
